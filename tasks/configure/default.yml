@@ -1,0 +1,22 @@
+- name: define present locales
+  locale_gen:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ locales_present }}"
+  notify: reconfigure locales
+
+- name: define absent locales
+  locale_gen:
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ locales_absent }}"
+  notify: reconfigure locales
+
+- name: configure default locale
+  template:
+    src: templates/etc/default/locale.j2
+    dest: /etc/default/locale
+    owner: root
+    group: root
+    mode: 0644
+  notify: reconfigure locales
