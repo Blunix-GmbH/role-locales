@@ -1,17 +1,15 @@
----
 - name: Converge
   hosts: all
-  become: yes
+  become: True
   roles:
     - role: role-locales
   vars:
+
     locales_present:
       - en_US.UTF-8
       - de_DE.UTF-8
-    locales_language_packs_present:
-      - language-pack-en
-      - language-pack-en-base
+
     locales_absent: []
-    locales_language_packs_absent: []
+
     locales_default:
       LANG: en_US.UTF-8

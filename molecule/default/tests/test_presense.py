@@ -6,4 +6,4 @@ testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
 
 
 def test_executable_exists(host):
-    assert host.file('/etc/default/locales').exists
+    assert host.file('/etc/default/locale').exists

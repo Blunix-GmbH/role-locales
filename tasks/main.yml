@@ -1,17 +1,25 @@
-- name: include distro installer
-  include_tasks: '{{ distro_installer }}'
-  with_first_found:
-    - install/{{ ansible_distribution }}.{{ ansible_lsb.codename }}.yml
-    - install/{{ ansible_distribution }}.yml
-    - install/default.yml
-  loop_control:
-    loop_var: distro_installer
+- name: install required packages
+  apt:
+    name:
+      - tzdata
+      - locales
+      - locales-all
+    state: present
 
-- name: include distro configurator
-  include_tasks: '{{ distro_configurator }}'
-  with_first_found:
-    - configure/{{ ansible_distribution }}.{{ ansible_lsb.codename }}.yml
-    - configure/{{ ansible_distribution }}.yml
-    - configure/default.yml
+- name: define present locales
+  locale_gen:
+    name: "{{ locale_present }}"
+    state: present
+  with_items: "{{ locales_present }}"
   loop_control:
-    loop_var: distro_configurator
+    loop_var: locale_present
+  notify: reconfigure locales
+
+- name: define absent locales
+  locale_gen:
+    name: "{{ locales_absent }}"
+    state: absent
+  with_items: "{{ locales_absent }}"
+  loop_control:
+    loop_var: locale_absent
+  notify: reconfigure locales
